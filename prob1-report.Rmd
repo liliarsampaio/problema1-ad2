@@ -17,7 +17,7 @@ Finalmente, Hans destaca o perigo ao se usar a média como métrica para analisa
 
 **Questão 2**
 
-Observando os dados, consegue-se destacar alguns campos da tabela que podem ser considerados bons indicadores do atual panorama geral do profissional de TI no Brasil, sendo eles *Região*, *Horas diárias*, *Experiência Profissional*, *Cargo* e *Formação*. Outros indicadores também poderiam ser incluídos nessa análise, porém considerando o objetivo da mesma como sendo uma visão geral da situação dos profissionais, entende-se que os dados selecionados são suficientes.
+Observando os dados, consegue-se destacar alguns campos da tabela que podem ser considerados bons indicadores do atual panorama geral do profissional de TI no Brasil, sendo eles, por exemplo, *Região*, *Horas diárias*, *Experiência Profissional*, *Cargo* e *Formação*. Outros indicadores também poderiam ser incluídos nessa análise, porém considerando o objetivo da mesma como sendo uma visão geral da situação dos profissionais, entende-se que os dados selecionados são suficientes.
 
 Considere *salarios* como sendo a tabela contendo os dados (162 observações) e *Regiao*, *Horas.Diarias*, *Experiencia.Profissional*, *Cargo* e *Formacao* as referentes colunas. As conclusões foram como segue:
 
@@ -26,9 +26,7 @@ Considere *salarios* como sendo a tabela contendo os dados (162 observações) e
 salarios = read.csv("salarios-ti-regioes.csv")
 ```
 
-1. Região
-
-Analisando o gráfico a seguir percebemos que a maior concentração de profissionais de TI no Brasil encontra-se na região Sudeste e Nordeste. Significa dizer que o maior número de oportunidades na área podem ser encontradas nessas regiões, por exemplo.
+1. Analisando o gráfico a seguir percebemos que a maior concentração de profissionais de TI no Brasil encontra-se na região Sudeste e Nordeste. Significa dizer que o maior número de oportunidades na área podem ser encontradas nessas regiões, por exemplo.
 
 ```{r}
 regioes <- table(salarios$Regiao)
@@ -46,6 +44,9 @@ summary(salarios$Regiao)
 ```{r}
 #Calculando a média de horas diárias
 mean(salarios$Horas.Diarias)
+
+horas<- 4:10 
+hist(salarios$Horas.Diarias, breaks=horas, right=FALSE, col="blue")
 ```
 
 3. Considerando o tempo de trabalho em anos, a experiência profissional é dada por **5.530185** em média. 
@@ -66,7 +67,7 @@ summary(salarios$Salario.Bruto)
 Vemos que a variação de salário no grupo estudado está entre um mínimo de R$500,00 e um máximo de R$42.120,00. Podemos dizer que esta é uma grande variação, mas, considerando o conjunto de dados como um todo vemos que apesar dessa discrepância, a maioria dos salários encontra-se no intervalo 0-5000, como podemos ver no histograma a seguir.
 
 ```{r}
-histinfo <- hist(salarios$Salario.Bruto, main = "Distribuicao salarial - Frequencia", col = c("blue"), xlab = "Salario Bruto")
+histinfo <- hist(salarios$Salario.Bruto, main = "Distribuição salarial - Frequencia", col = c("blue"), xlab = "Salario Bruto")
 ```
 
 Mais precisamente, considerando os intervalos assumidos como
@@ -84,16 +85,20 @@ histinfo$count
 vemos que um número de 117 casos encontra-se no intervalo 0-5000. Para confirmar o presumido de que a maioria dos casos encontra-se nessa faixa de salários, podemos analisar a densidade de cada intervalo no gráfico de densidades dado abaixo:
 
 ```{r}
-histinfo <- hist(salarios$Salario.Bruto, freq = FALSE, main = "Distribuicao salarial - Densidade", col = c("blue"), xlab = "Salario Bruto")
+d<-density(salarios$Salario.Bruto)
+plot(d, main = "Distribuição salarial - Densidade", col = c("blue"), xlab = "Salario Bruto")
 ```
 
 Apenas avaliando os gráficos acima, já conseguimos perceber que valores em alguns intervalos tem frequência e densidade quase nenhuma, diferindo bastante do grupo predominante. A esses valores damos o nome de outliers. Alguns gráficos conseguem ser mais específicos acerca de possíveis outliers, como podemos ver no `boxplot` a seguir, que nos mostra a presença de 4 outliers (pontos circulares) no conjunto de dados estudado.
 
 ```{r}
-boxplot(salarios$Salario.Bruto, main = "Distribuicao salarial - Boxplot e outliers", ylab = "Salario Bruto")
+summary(salarios$Salario.Bruto)
+boxplot(salarios$Salario.Bruto, main = "Distribuição salarial - Boxplot e outliers", ylab = "Salario Bruto")
 ```
  
 **Questão 4**
+
+A distribuição encontrada é em parte como esperada. Com o cenário atual, essa distribuição concentrada entre os valores de 0-5000 e 5000-10000 atende à minha suposição inicial sem conhecimento dos dados apresentados. Assim, ao analisar os dados, pudemos comprovar tal suposição, mas a presença de outliers tão mais altos foram, em parte, uma surpresa. É certo que, ao realizar uma pesquisa e análise de dados como essa, é esperado que outliers possam aparecer eventualmente, mas, ao meu ver, a discrepância foi um tanto quanto grande demais nesse caso.
 
 **Questão 5**
 
@@ -133,7 +138,12 @@ Seguindo essa mesma lógica de cruzamento de dados, podemos cruzar *Salario.Brut
 media.cargo <- tapply(salarios$Salario.Bruto, salarios$Cargo, mean)
 ```
 
-Ordenando esse conjunto, temos por exemplo que os cinco cargos com maiores salários são *Analista de Suporte (R$22810.00)*, *Consultor PNUD/GP (R$15000.00)*, *Governança de TI (R$13787.00)*, *Arquiteto de Sistemas, Java/Oracle/J2EE/Web (R$8500.00)* e *COBOL (R$8000.00)*. Ainda se destacam, por exemplo, *Analista de Sistemas/Lider de equipe (R$7680.00)* e *Gerente de Projetos (R$7550.00)*. 
+Ordenando esse conjunto, temos por exemplo que os três cargos com maiores salários são *Analista de Suporte*, *Consultor PNUD/GP*  *Governança de TI*. Outros cargos ainda se destacam, como podemos ver abaixo. 
+
+```{r}
+sort.media.cargo <- sort(media.cargo, decreasing=TRUE)
+head(sort.media.cargo)
+```
 
 Ainda seguindo a mesma linha, podemos cruzar *Salario.Bruto* com *Pos.Graduacao.ou.Certificacao*, tendo, portanto,
 
