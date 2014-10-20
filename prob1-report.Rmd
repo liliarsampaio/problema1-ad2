@@ -7,7 +7,13 @@ output: html_document
 
 **Questão 1**
 
-Ao assistir o video
+Ao tentar responder a questão sobre a existência de dois mundos, o ocidental norte rico e o resto do mundo pobre, Hans traça um caminho analisando os dados e percorrendo vários aspectos que de alguma maneira são de relevância para a questão. Escolher que aspectos são esses, é portanto, o primeiro passo. 
+
+Assim, Hans começa expondo um gráfico de pontos, onde cada ponto representa um país, e tem o tamanho proporcinal à população desse país. O aspecto analisado é a expectativa de vida versus a quantidade de filhos por mulher no dado país. Os dados são analisados no decorrer de um espaço de tempo, e mostra que, com o passar dos anos, países mais ricos e pobres, passam a ocupar o mesmo lugar no gráfico, com famílias pequenas e expectativa de vida longa.
+
+Outro aspecto é então analisado. Qual a distribuição de renda no mundo também com o passar do tempo. Um gráfico de densidade é então utilizado para mostrar onde está a população no que se refere a quantidade de dolars recebido por dia. Esse aspecto leva a outro, qual a relação da taxa de sobrevivencia de recém nascidos com a renda per capita do país. Outro gráfico de pontos similar ao primeiro é utilizado.
+
+Finalmente, Hans destaca o perigo ao se usar a média como métrica para analisar o conjunto de dados, pois uma mesma região do mundo pode ser bastante diferente em suas áreas e podem, em outras palavras, portanto, ter seu resultado influenciado por outliers.
 
 **Questão 2**
 
