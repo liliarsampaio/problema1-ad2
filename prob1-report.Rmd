@@ -1,0 +1,140 @@
+---
+title: "AD2 - Problema 1"
+author: "Lilia Sampaio"
+date: "October 15, 2014"
+output: html_document
+---
+
+**Questão 1**
+
+Ao assistir o video
+
+**Questão 2**
+
+Observando os dados, consegue-se destacar alguns campos da tabela que podem ser considerados bons indicadores do atual panorama geral do profissional de TI no Brasil, sendo eles *Região*, *Horas diárias*, *Experiência Profissional*, *Cargo* e *Formação*. Outros indicadores também poderiam ser incluídos nessa análise, porém considerando o objetivo da mesma como sendo uma visão geral da situação dos profissionais, entende-se que os dados selecionados são suficientes.
+
+Considere *salarios* como sendo a tabela contendo os dados (162 observações) e *Regiao*, *Horas.Diarias*, *Experiencia.Profissional*, *Cargo* e *Formacao* as referentes colunas. As conclusões foram como segue:
+
+```{r}
+#Importando o dataset
+salarios = read.csv("salarios-ti-regioes.csv")
+```
+
+1. Região
+
+Analisando o gráfico a seguir percebemos que a maior concentração de profissionais de TI no Brasil encontra-se na região Sudeste e Nordeste. Significa dizer que o maior número de oportunidades na área podem ser encontradas nessas regiões, por exemplo.
+
+```{r}
+regioes <- table(salarios$Regiao)
+barplot(regioes, width = .1, space = .5, col = c("blue"), xlab = "Regioes")
+```
+
+Se quisermos um sumário detalhado acerca dos números de cada região, ou seja, a quantidade exata de profissionais considerando o conjunto de dados analisados, temos os números a seguir:
+
+```{r}
+summary(salarios$Regiao)
+```
+
+2. Os profissionais de TI no Brasil trabalham em média **7.885679 horas** por dia. 
+
+```{r}
+#Calculando a média de horas diárias
+mean(salarios$Horas.Diarias)
+```
+
+3. Considerando o tempo de trabalho em anos, a experiência profissional é dada por **5.530185** em média. 
+
+```{r}
+#Calculando a média da experiência profissional
+mean(salarios$Experiencia.Profissional)
+```
+
+**Questão 3**
+
+Podemos ter uma visão sumarizada da configuração salarial do profissional de TI no Brasil, considerando os dados utilizados, abaixo:
+
+```{r}
+summary(salarios$Salario.Bruto)
+```
+
+Vemos que a variação de salário no grupo estudado está entre um mínimo de R$500,00 e um máximo de R$42.120,00. Podemos dizer que esta é uma grande variação, mas, considerando o conjunto de dados como um todo vemos que apesar dessa discrepância, a maioria dos salários encontra-se no intervalo 0-5000, como podemos ver no histograma a seguir.
+
+```{r}
+histinfo <- hist(salarios$Salario.Bruto, main = "Distribuicao salarial - Frequencia", col = c("blue"), xlab = "Salario Bruto")
+```
+
+Mais precisamente, considerando os intervalos assumidos como
+
+```{r}
+histinfo$breaks
+```
+
+e a quantidade de casos incluidos em cada intervalo como
+
+```{r}
+histinfo$count
+```
+
+vemos que um número de 117 casos encontra-se no intervalo 0-5000. Para confirmar o presumido de que a maioria dos casos encontra-se nessa faixa de salários, podemos analisar a densidade de cada intervalo no gráfico de densidades dado abaixo:
+
+```{r}
+histinfo <- hist(salarios$Salario.Bruto, freq = FALSE, main = "Distribuicao salarial - Densidade", col = c("blue"), xlab = "Salario Bruto")
+```
+
+Apenas avaliando os gráficos acima, já conseguimos perceber que valores em alguns intervalos tem frequência e densidade quase nenhuma, diferindo bastante do grupo predominante. A esses valores damos o nome de outliers. Alguns gráficos conseguem ser mais específicos acerca de possíveis outliers, como podemos ver no `boxplot` a seguir, que nos mostra a presença de 4 outliers (pontos circulares) no conjunto de dados estudado.
+
+```{r}
+boxplot(salarios$Salario.Bruto, main = "Distribuicao salarial - Boxplot e outliers", ylab = "Salario Bruto")
+```
+ 
+**Questão 4**
+
+**Questão 5**
+
+Na tabela abaixo podemos ver a média salarial do profissional de TI no Brasil em cada uma de suas regiões, ordenadas da maior média para a menor.
+
+```{r}
+media.regiao <- tapply(salarios$Salario.Bruto, salarios$Regiao, mean)
+sort(media.regiao, decreasing=TRUE)
+```
+
+Salvamos então a tabela executando
+
+```{r}
+write.csv(media.regiao, file="salario-regiao.csv")
+```
+
+Caso tivéssimos utilizado a métrica **mediana** ao invés da *média*, teríamos o seguinte resultado:
+
+```{r}
+mediana.regiao <- tapply(salarios$Salario.Bruto, salarios$Regiao, median)
+sort(mediana.regiao, decreasing=TRUE)
+```
+
+Nesse caso, a ordem de maior média salarial muda de **Centro-oeste, Nordeste, Sudeste, Sul e Norte** para **Centro-oeste, Sudeste, Sul     Nordeste e Norte**. 
+
+Isso se dá pois quando calculamos a média com a função `mean`, esse valor é obtido somando-se todos os valores do conjunto e dividindo o resultado pelo número de observações considerado, ou seja, uma média regular, que considera **todos** os valores do conjunto, inclusive possiveis outliers. O resultado dessa operação pode ser, portanto, bastante influenciado por tais outliers caso eles sejam muito maiores ou muito menores que o restante dos valores considerados. 
+
+Ao utilizar a mediana com a função `median`, por outro lado, o resultado é obtido ordenando-se os valores, e encontrando apenas o valor que está exatamente no meio do conjunto, sendo este considerado como mediana dos dados sendo observados. 
+
+**Questão 6**
+
+Considerando o que foi descoberto na questão anterior, temos que a região com melhor média salarial é a Centro-Oeste. Portanto, profissinais que não estejam localizados nessa região, por exemplo, tem a chance de melhorar seu salário buscando oportunidades lá.
+
+Seguindo essa mesma lógica de cruzamento de dados, podemos cruzar *Salario.Bruto* com *Cargo* e ter uma ideia das posições de profissionais de TI que estão pagando melhor de acordo com os dados utilizados. Teríamos, portanto, como segue
+
+```{r}
+media.cargo <- tapply(salarios$Salario.Bruto, salarios$Cargo, mean)
+```
+
+Ordenando esse conjunto, temos por exemplo que os cinco cargos com maiores salários são *Analista de Suporte (R$22810.00)*, *Consultor PNUD/GP (R$15000.00)*, *Governança de TI (R$13787.00)*, *Arquiteto de Sistemas, Java/Oracle/J2EE/Web (R$8500.00)* e *COBOL (R$8000.00)*. Ainda se destacam, por exemplo, *Analista de Sistemas/Lider de equipe (R$7680.00)* e *Gerente de Projetos (R$7550.00)*. 
+
+Ainda seguindo a mesma linha, podemos cruzar *Salario.Bruto* com *Pos.Graduacao.ou.Certificacao*, tendo, portanto,
+
+```{r}
+tapply(salarios$Salario.Bruto, salarios$Pos.Graduacao.ou.Certificacao, mean)
+```
+
+Com isso, vemos que a média salarial do profissional que possui uma certificação ou pos-gradução é maior que a de quem não possui. 
+
+A análise desses aspectos já é capaz de prover boas informações para profissionais de TI buscando ser melhor pago em suas funções, por exemplo.
